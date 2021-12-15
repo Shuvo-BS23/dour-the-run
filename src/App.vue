@@ -1,15 +1,12 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <router-view/>
+  <router-view />
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  setup() {
-    
-  },
-})
+  setup() {},
+});
 </script>
 
 <style>
