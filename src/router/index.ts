@@ -5,7 +5,9 @@ import About from "../views/About.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Events from "../views/Events.vue";
 import Home from "../views/Home.vue";
+import SingleEvent from "../views/SingleEvent.vue";
 import Store from "../views/Store.vue";
+
 const routes = [
   {
     path: "/",
@@ -54,6 +56,12 @@ const routes = [
     path: "/about",
     name: "About",
     component: About,
+  },
+
+  {
+    path: "/singleevent",
+    name: "SingleEvent",
+    component: SingleEvent,
   },
 ];
 
