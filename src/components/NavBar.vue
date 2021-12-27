@@ -4,20 +4,25 @@
     <Menubar :model="state? loggedInItems : loggedOutItems">
       <template>
         <!-- <img alt="logo" src="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png" height="40" class="p-mr-2"> -->   
-        <router-view />       
+        <router-view />
+        
       </template>
-      <!-- <template #end>
-        <InputText placeholder="Search" type="text" />
-      </template> -->
+        <template #end>
+          <router-link v-show="state" to='/' @click.native="logout">log out</router-link>
+        </template>
+
       
     </Menubar>
   </div>
 </template>
 
 <script lang='ts'>
-import { ref } from 'vue';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signOut } from 'firebase/auth';
+import { onMounted, ref } from 'vue';
 import SignInForm from "../components/SignInForm.vue";
 import SignUpForm from "../components/SignUpForm.vue";
+import config from '../firebase';
 import store from '../store';
 // import "primevue/resources/themes/mdc-dark-indigo/theme.css"
 
@@ -32,7 +37,8 @@ import store from '../store';
       const loggedInItems = ref([
         {
           label:'Dashboard',
-          to: {name: 'Dashboard'}
+          to: {name: 'Dashboard'},
+          
         },
 
         {
@@ -63,7 +69,28 @@ import store from '../store';
         },
       ]);
 
-      return { loggedInItems, loggedOutItems, state }
+      const logout = () =>{
+        initializeApp(config)
+
+        const auth = getAuth()
+
+        signOut(auth)
+        .then(()=>{
+          alert("Successfully logged out")
+          store.state.isSignedIn = false;
+          state.value = store.state.isSignedIn
+        })
+        .catch((err)=>{
+          alert(err.message)
+          console.log(err);
+        })
+      }
+
+      onMounted(() => {
+        state.value = store.state.isSignedIn
+      })
+
+      return { loggedInItems, loggedOutItems, state, logout }
     }
   }
 </script>

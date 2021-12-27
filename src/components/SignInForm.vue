@@ -2,17 +2,17 @@
   <div>
     <div class="card">
       
-      <form>
+      <form @submit.prevent="handleLogin">
         <h4>Sign In</h4>
         <div class="p-fluid">
           
             <div class="p-field">
                 <label for="email">Email</label>
-                <InputText id="email" type="email" />
+                <InputText id="email" type="email" v-model="email"/>
             </div>
             <div class="p-field">
                 <label for="password">Password</label>
-                <InputText id="password" type="password" />
+                <InputText id="password" type="password" v-model="password"/>
             </div>
 
             <div class="form-element">
@@ -26,14 +26,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { defineComponent, ref } from 'vue';
+import config from '../firebase';
+import store from '../store';
 // import "primevue/resources/themes/mdc-light-indigo/theme.css"
 
 export default defineComponent({
   name: "SignInForm",
   setup () {
 
-    return {}
+    const redirectUrl = "http://localhost:3000/redirect"
+
+    const email = ref('');
+    const password = ref('');
+    const handleLogin =()=>{
+      alert("done")
+
+      initializeApp(config)
+
+      const auth = getAuth()
+
+      signInWithEmailAndPassword(auth, email.value, password.value)
+      .then(()=>{
+        alert("successfully signed in")
+        store.state.isSignedIn = true;
+        // this.$ 'http://www.strava.com/oauth/authorize?client_id=75695&response_type=code&redirect_uri=http://localhost:3000&scope=read_all'
+
+        // this.$route.push()
+        // router.push('https://www.strava.com/oauth/authorize?client_id=75695&response_type=code&redirect_uri=http://localhost:3000&scope=read_all')
+      })
+      .catch((err)=>{
+        alert("error occured")
+        console.log(err)
+      })
+    }
+
+    return {email, password, handleLogin}
   }
 })
 </script>

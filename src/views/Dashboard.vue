@@ -6,10 +6,10 @@
           <div class="p-col-12">
             <Card class="card-items">
               <template #header>
-                  <img alt="user header" src="../assets/logo.png">
+                  <img alt="user header" :src="proPic">
               </template>
               <template #title>
-                  <h1>Advanced Card</h1>
+                  <h1>{{firstName}} {{lastName}}</h1>
                   <!-- Advanced Card -->
               </template>
           </Card>
@@ -18,7 +18,7 @@
           <div class="p-col-12">
             <Card class="card-items">
               <template #content>
-                Hello Dashboard
+                Hello {{firstName}}
               </template>
             </Card>
           </div>
@@ -66,14 +66,54 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import axios from 'axios';
+import { defineComponent, onMounted, ref } from 'vue';
 
 export default defineComponent({
   name: "Dashboard",
   setup () {
-    
 
-    return {}
+    const firstName = ref('');
+    const lastName = ref('');
+    const proPic = ref('');
+
+    const init = async () => {
+        try {
+            const firstResponse = await axios({
+                method: 'POST',
+                url: 'https://www.strava.com/oauth/token',
+                params: {
+                    client_id: 'your client id',
+                    client_secret: 'your client secret',
+                    grant_type: 'refresh_token',
+                    refresh_token: 'your client secret',
+                },
+            })
+            const token = firstResponse.data.access_token;
+            console.log(token) // Keep this line only if you need the token for something else later
+            const secondResponse = await axios({
+                method: 'GET',
+                url: `https://www.strava.com/api/v3/athlete`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            console.log(secondResponse.data);
+            firstName.value = secondResponse.data.firstname;
+            lastName.value = secondResponse.data.lastname;
+            proPic.value = secondResponse.data.profile;
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    onMounted(()=>{
+      init();
+    })
+
+    return { firstName, lastName, proPic }
   }
 })
 </script>
