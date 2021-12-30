@@ -7,6 +7,7 @@ import Events from "../views/Events.vue";
 import Home from "../views/Home.vue";
 import SingleEvent from "../views/SingleEvent.vue";
 import Store from "../views/Store.vue";
+import GetCode from "../components/GetCode.vue";
 
 const routes = [
   {
@@ -34,11 +35,11 @@ const routes = [
     ],
   },
 
-  // {
-  //   path: "/dashboard",
-  //   name: "Dashboard",
-  //   component: Dashboard,
-  // },
+  {
+    path: "/get-strava-code",
+    name: "GetCode",
+    component: GetCode,
+  },
 
   {
     path: "/events",

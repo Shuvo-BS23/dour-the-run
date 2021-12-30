@@ -1,75 +1,71 @@
 <template>
   <div>
     <div class="card">
-      
       <form @submit.prevent="handleLogin">
         <h4>Sign In</h4>
         <div class="p-fluid">
-          
-            <div class="p-field">
-                <label for="email">Email</label>
-                <InputText id="email" type="email" v-model="email"/>
-            </div>
-            <div class="p-field">
-                <label for="password">Password</label>
-                <InputText id="password" type="password" v-model="password"/>
-            </div>
+          <div class="p-field">
+            <label for="email">Email</label>
+            <InputText id="email" type="email" v-model="email" />
+          </div>
+          <div class="p-field">
+            <label for="password">Password</label>
+            <InputText id="password" type="password" v-model="password" />
+          </div>
 
-            <div class="form-element">
-              <Button class="button" type='submit'>Sign In</Button>
-            </div>
+          <div class="form-element">
+            <Button class="button" type="submit">Sign In</Button>
+          </div>
         </div>
       </form>
-      
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { defineComponent, ref } from 'vue';
-import config from '../firebase';
-import store from '../store';
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { defineComponent, ref } from "vue";
+import config from "../firebase";
+import store from "../store";
 // import "primevue/resources/themes/mdc-light-indigo/theme.css"
 
 export default defineComponent({
   name: "SignInForm",
-  setup () {
+  setup() {
+    const redirectUrl = "http://localhost:3000/redirect";
 
-    const redirectUrl = "http://localhost:3000/redirect"
+    const email = ref("");
+    const password = ref("");
+    const handleLogin = () => {
+      alert("done");
 
-    const email = ref('');
-    const password = ref('');
-    const handleLogin =()=>{
-      alert("done")
+      initializeApp(config);
 
-      initializeApp(config)
-
-      const auth = getAuth()
+      const auth = getAuth();
 
       signInWithEmailAndPassword(auth, email.value, password.value)
-      .then(()=>{
-        alert("successfully signed in")
-        store.state.isSignedIn = true;
-        // this.$ 'http://www.strava.com/oauth/authorize?client_id=75695&response_type=code&redirect_uri=http://localhost:3000&scope=read_all'
+        .then(() => {
+          alert("successfully signed in");
+          store.state.isSignedIn = true;
+          // this.$ 'http://www.strava.com/oauth/authorize?client_id=75695&response_type=code&redirect_uri=http://localhost:3000&scope=read_all'
 
-        // this.$route.push()
-        // router.push('https://www.strava.com/oauth/authorize?client_id=75695&response_type=code&redirect_uri=http://localhost:3000&scope=read_all')
-      })
-      .catch((err)=>{
-        alert("error occured")
-        console.log(err)
-      })
-    }
+          // this.$route.push()
+          // router.push('https://www.strava.com/oauth/authorize?client_id=75695&response_type=code&redirect_uri=http://localhost:3000&scope=read_all')
+        })
+        .catch((err) => {
+          alert("error occured");
+          console.log(err);
+        });
+    };
 
-    return {email, password, handleLogin}
-  }
-})
+    return { email, password, handleLogin };
+  },
+});
 </script>
 
 <style scoped lang="scss">
-.card{
+.card {
   display: flex;
   align-content: center;
   justify-content: center;
@@ -77,27 +73,27 @@ export default defineComponent({
   margin: 50px 0 0 140px;
   padding: 50px 0 0 0;
 
-  .p-field{
+  .p-field {
     padding-top: 10px;
 
-    label{
+    label {
       text-align: center;
     }
   }
 }
 
-h4{
+h4 {
   text-align: center;
   text-decoration: underline;
 }
 
-.form-element{
+.form-element {
   padding: 20px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  .button{
+  .button {
     width: 80px;
     height: 50px;
     text-align: center;
